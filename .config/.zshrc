@@ -54,6 +54,8 @@ source $ZPLUG_HOME/init.zsh
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "romkatv/powerlevel10k", as:theme
+#zplug "starship/starship", from:gh-r, as:command, use:"*-$(uname -m)-*-gnu.tar.gz", rename-to:"starship"
+#zplug "plugins/ssh-agent", from:oh-my-zsh
 
 
 if ! zplug check; then
@@ -61,6 +63,9 @@ if ! zplug check; then
 fi
 
 zplug load
+
+# STARSHIP_EXE="$ZPLUG_HOME/repos/starship/starship/starship"
+# [[ ! -f $STARSHIP_EXE ]] || eval "$( $STARSHIP_EXE init zsh )"
 
 # P10K config
 
