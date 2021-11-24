@@ -6,6 +6,7 @@ g.mapleader = " "
 vim.api.nvim_set_keymap("n", "<Space>", "<Nop>", {noremap = true})
 
 require("settings.keymaps")
+require("settings.lang")
 
 set.tabstop = 4
 set.shiftwidth = 0

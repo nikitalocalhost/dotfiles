@@ -16,7 +16,9 @@ require("nvim-tree").setup(
 		open_on_setup = true,
 		update_cwd = true,
 		open_on_tab = true,
-		lsp_diagnostics = true,
+		diagnostics = {
+			enable = true
+		},
 		update_to_buf_dir = {
 			enable = true,
 			auto_open = true

@@ -2,18 +2,18 @@ local P = {}
 
 function P.init(use)
 	use {
-		'nvim-telescope/telescope.nvim',
+		"nvim-telescope/telescope.nvim",
 		requires = {
-			{'nvim-lua/plenary.nvim'},
-			{'nvim-lua/popup.nvim'},
+			{"nvim-lua/plenary.nvim"},
+			{"nvim-lua/popup.nvim"},
 			{
-				'kyazdani42/nvim-web-devicons',
+				"kyazdani42/nvim-web-devicons",
 				optional = true
 			},
 			{
-				'sudormrfbin/cheatsheet.nvim',
+				"sudormrfbin/cheatsheet.nvim",
 				config = function()
-					require('plugins.ui.cheatsheet')
+					require("plugins.ui.cheatsheet")
 				end
 			}
 		}
@@ -37,66 +37,65 @@ function P.init(use)
 	-- }
 
 	use {
-		'ahmedkhalf/project.nvim',
+		"ahmedkhalf/project.nvim",
 		config = function()
 			require("project_nvim").setup({})
-			require('telescope').load_extension('projects')
+			require("telescope").load_extension("projects")
 		end
 	}
 
 	use {
-		'glepnir/galaxyline.nvim',
-		branch = 'main',
+		"glepnir/galaxyline.nvim",
+		branch = "main",
 		requires = {
-			'kyazdani42/nvim-web-devicons'
+			"kyazdani42/nvim-web-devicons"
 		},
 		config = function()
-			require('plugins.ui.line')
+			require("plugins.ui.line")
 		end
 	}
 
 	use {
-		'akinsho/bufferline.nvim',
+		"akinsho/bufferline.nvim",
 		config = function()
-			require('plugins.ui.bufferline')
+			require("plugins.ui.bufferline")
 		end,
 		requires = {
-			'kyazdani42/nvim-web-devicons'
+			"kyazdani42/nvim-web-devicons"
 		}
 	}
 
 	use {
-		'kyazdani42/nvim-tree.lua',
+		"kyazdani42/nvim-tree.lua",
 		config = function()
-			require('plugins.ui.tree')
+			require("plugins.ui.tree")
 		end,
 		requires = {
-			'kyazdani42/nvim-web-devicons'
+			"kyazdani42/nvim-web-devicons"
 		}
 	}
 
 	use {
-		'lukas-reineke/indent-blankline.nvim',
+		"lukas-reineke/indent-blankline.nvim",
 		config = function()
 			vim.opt.list = true
 			vim.opt.listchars:append("space:⋅")
 			vim.opt.listchars:append("eol:↴")
-			require("indent_blankline").setup({
-				space_char_blankline = " ",
-				buftype_exclude = {"terminal"},
-				show_current_context = true
-			})
+			require("indent_blankline").setup(
+				{
+					space_char_blankline = " ",
+					buftype_exclude = {"terminal"},
+					show_current_context = true
+				}
+			)
 		end
 	}
 
 	use {
-		'arcticicestudio/nord-vim',
+		"shaunsingh/nord.nvim",
 		config = function()
-			vim.cmd[[colorscheme nord]]
-		end,
-		requires = {
-			'folke/lsp-colors.nvim'
-		}
+			vim.cmd [[colorscheme nord]]
+		end
 	}
 	-- use {
 	-- 	'shaunsingh/nord.nvim',
@@ -105,6 +104,5 @@ function P.init(use)
 	-- 	end
 	-- }
 end
-
 
 return P

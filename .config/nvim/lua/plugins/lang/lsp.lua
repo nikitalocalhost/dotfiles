@@ -1,37 +1,47 @@
-require('lspinstall').setup()
+local lsp = require("lspconfig")
 
-local default_config = {
-	capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+vim.g.coq_settings = {
+	auto_start = "shut-up",
+	xdg = true
 }
+local coq = require("coq")
+local lsp_installer = require("nvim-lsp-installer")
+
+lsp_installer.settings(
+	{
+		log_level = vim.log.levels.WARN
+	}
+)
+
+local default_config = coq.lsp_ensure_capabilities({})
 
 local configs = {
 	lua = {
 		settings = {
 			Lua = {
 				diagnostics = {
-					globals = { 'vim' }
+					globals = {"vim"}
 				}
 			}
 		}
+	},
+	ocamlls = {
+		root_dir = lsp.util.root_pattern(".merlin", "package.json", "dune")
+	},
+	elixirls = {
+		cmd = {vim.fn.stdpath("data") .. "/lsp_servers/elixir/elixir-ls/language_server.sh"}
 	}
 }
 
-local function setup_servers()
-	local servers = require('lspinstall').installed_servers()
-	for _, server in pairs(servers) do
-		local config = configs[server]
-		if config then
-			config = vim.tbl_deep_extend("force", default_config, config)
+lsp_installer.on_server_ready(
+	function(server)
+		local opts = configs[server.name]
+		if opts then
+			opts = vim.tbl_deep_extend("force", default_config, opts)
 		else
-			config = default_config
+			opts = default_config
 		end
-		require('lspconfig')[server].setup(config)
+		server:setup(opts)
+		vim.cmd [[ do User LspAttachBuffers ]]
 	end
-end
-
-setup_servers()
-
-require('lspinstall').post_install_hook = function()
-	setup_servers()
-	vim.cmd('bufdo e')
-end
+)

@@ -2,42 +2,75 @@ local P = {}
 
 function P.init(use)
 	use {
-		'neovim/nvim-lspconfig',
+		"neovim/nvim-lspconfig",
 		config = function()
-			require('plugins.lang.lsp')
+			require("plugins.lang.lsp")
 		end,
 		requires = {
-			{ 'kabouzeid/nvim-lspinstall' }
+			{"williamboman/nvim-lsp-installer"}
+		}
+	}
+
+	-- use {
+	-- 	"hrsh7th/nvim-cmp",
+	-- 	config = function()
+	-- 		require("plugins.lang.compe")
+	-- 	end,
+	-- 	requires = {
+	-- 		{"hrsh7th/cmp-nvim-lsp"},
+	-- 		{"hrsh7th/cmp-buffer"},
+	-- 		{"hrsh7th/nvim-cmp"},
+	-- 		{"L3MON4D3/LuaSnip"},
+	-- 		{"saadparwaiz1/cmp_luasnip"}
+	-- 	}
+	-- }
+	use {
+		"ms-jpq/coq_nvim",
+		branch = "coq",
+		run = ":COQdeps",
+		requires = {
+			{
+				"ms-jpq/coq.artifacts",
+				branch = "artifacts"
+			},
+			{
+				"ms-jpq/coq.thirdparty",
+				branch = "3p"
+			}
 		}
 	}
 
 	use {
-		'hrsh7th/nvim-cmp',
+		"mhartington/formatter.nvim",
 		config = function()
-			require('plugins.lang.compe')
+			require("plugins.lang.format")
+		end
+	}
+
+	use {
+		"nvim-treesitter/nvim-treesitter",
+		run = ":TSUpdate",
+		config = function()
+			require("plugins.lang.highlight")
+		end
+	}
+
+	use {
+		"glepnir/lspsaga.nvim",
+		config = function()
+			local saga = require 'lspsaga'
+			saga.init_lsp_saga()
+		end
+	}
+
+	use {
+		"TimUntersberger/neogit",
+		config = function()
+			require("neogit").setup({})
 		end,
 		requires = {
-			{ 'hrsh7th/cmp-nvim-lsp' },
-			{ 'hrsh7th/cmp-buffer' },
-			{ 'hrsh7th/nvim-cmp' },
-			{ 'L3MON4D3/LuaSnip' },
-			{ 'saadparwaiz1/cmp_luasnip' }
+			{"nvim-lua/plenary.nvim"}
 		}
-	}
-
-	use {
-		'mhartington/formatter.nvim',
-		config = function()
-			require('plugins.lang.format')
-		end
-	}
-
-	use {
-		'nvim-treesitter/nvim-treesitter',
-		run = ':TSUpdate',
-		config = function()
-			require('plugins.lang.highlight')
-		end
 	}
 end
 
