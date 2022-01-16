@@ -12,9 +12,34 @@ if [ ! -w ${XDG_RUNTIME_DIR:="/run/user/$UID"} ]; then
 fi
 export XDG_RUNTIME_DIR
 
+SSH_ENV="$HOME/.ssh/agent-environment"
+
+function start_agent {
+	#echo "Initialising new SSH agent..."
+	/usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+	#echo succeeded
+	chmod 600 "${SSH_ENV}"
+	. "${SSH_ENV}" > /dev/null
+	/usr/bin/ssh-add;
+}
+
+if [ -f "${SSH_ENV}" ]; then
+	. "${SSH_ENV}" > /dev/null
+	ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+		start_agent;
+	}
+else
+	start_agent;
+fi
+
+path+=("$HOME/.local/bin")
+
 # Zsh
 export ZDOTDIR=$XDG_CONFIG_HOME
 export HISTFILE=$XDG_STATE_HOME/zsh/history
+
+# GPG
+export GPG_TTY=$(tty)
 
 # Elixir Mix
 export MIX_HOME=$XDG_DATA_HOME/mix
@@ -71,5 +96,9 @@ export NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
 # Node.js Yarn
 path+=("$HOME/.yarn/bin")
 #alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME/yarn/config"'
+
+# Emacs Doom
+export DOOMDIR=$XDG_CONFIG_HOME/doom
+path+=("$XDG_CONFIG_HOME/emacs/bin")
 
 export PATH
