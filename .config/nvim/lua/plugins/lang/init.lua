@@ -7,7 +7,8 @@ function P.init(use)
 			require("plugins.lang.lsp")
 		end,
 		requires = {
-			{"williamboman/nvim-lsp-installer"}
+			{"williamboman/nvim-lsp-installer"},
+			{"mattn/efm-langserver"}
 		}
 	}
 
@@ -41,13 +42,6 @@ function P.init(use)
 	}
 
 	use {
-		"mhartington/formatter.nvim",
-		config = function()
-			require("plugins.lang.format")
-		end
-	}
-
-	use {
 		"nvim-treesitter/nvim-treesitter",
 		run = ":TSUpdate",
 		config = function()
@@ -56,9 +50,9 @@ function P.init(use)
 	}
 
 	use {
-		"glepnir/lspsaga.nvim",
+		"tami5/lspsaga.nvim",
 		config = function()
-			local saga = require 'lspsaga'
+			local saga = require "lspsaga"
 			saga.init_lsp_saga()
 		end
 	}

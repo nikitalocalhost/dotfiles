@@ -1,5 +1,7 @@
 # P10K instant prompt
 
+fpath+=${XDG_CONFIG_HOME}/zsh/compe
+
 export POWERLEVEL9K_INSTANT_PROMPT="quiet"
 export POWERLEVEL9K_INSTANT_PROMPT_FILE=${XDG_CACHE_HOME}/p10k-instant-prompt-${(%):-%n}.zsh
 if [[ -r $POWERLEVEL9K_INSTANT_PROMPT_FILE ]]; then
@@ -37,6 +39,7 @@ alias dotfiles='/usr/bin/env git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
 alias e='$EDITOR'
 alias ez='e $ZDOTDIR/.zshrc'
 alias mpv='noglob mpv'
+alias kitty-ssh='kitty +kitten ssh'
 
 
 # ZPlug init

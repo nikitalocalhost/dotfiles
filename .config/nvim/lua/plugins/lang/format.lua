@@ -1,62 +1,148 @@
-local prettier_config = function()
-	return {
-		exe = "prettier",
-		args = {
-			"--stdin-filepath",
-			vim.fn.fnameescape(vim.api.nvim_buf_get_name(0))
-		},
-		stdin = true
-	}
-end
+local M = {}
 
-require("formatter").setup(
-	{
-		filetype = {
-			lua = {
-				function()
-					return {
-						exe = "luafmt",
-						args = {
-							"--use-tabs",
-							"--indent-count",
-							4,
-							"--stdin"
-						},
-						stdin = true
-					}
-				end
-			},
-			elixir = {
-				function()
-					return {
-						exe = "mix",
-						args = {
-							"format",
-							"-"
-						},
-						stdin = true
-					}
-				end
-			},
-			json = {
-				prettier_config
-			},
-			javascript = {
-				prettier_config
-			},
-			typescript = {
-				prettier_config
-			}
+local eslint = {
+	rootPatterns = {
+		".git",
+		"package.json",
+		".eslintrc.json"
+	},
+	command = "./node_modules/.bin/eslint",
+	args = {
+		"--stdin",
+		"--stdin-filename",
+		"%filepath",
+		"--format",
+		"json"
+	},
+	sourceName = "eslint",
+	parseJson = {
+		errorsRoot = "[0].messages",
+		line = "line",
+		column = "column",
+		endLine = "endLine",
+		endColumn = "endColumn",
+		message = "${message} [${ruleId}]",
+		security = "severity"
+	},
+	securities = {
+		[2] = "error",
+		[1] = "warning"
+	}
+}
+
+local stylelint = {
+	rootPatterns = {
+		".git",
+		"package.json"
+	},
+	command = "./node_modules/.bin/stylelint",
+	args = {
+		"--formatter",
+		"json",
+		"--stdin-filename",
+		"%filepath"
+	},
+	sourceName = "stylelint",
+	parseJson = {
+		errorsRoot = "[0].warnings",
+		line = "line",
+		column = "column",
+		message = "${text}",
+		security = "severity"
+	},
+	securities = {
+		error = "error",
+		warning = "warning"
+	}
+}
+
+local credo = {
+	rootPatterns = {
+		".git",
+		"mix.exs",
+		".credo.exs"
+	},
+	command = "mix",
+	args = {"credo", "suggest", "--format", "flycheck", "--read-from-stdin"},
+	sourceName = "credo",
+	offsetLine = 0,
+	offsetColumn = 0,
+	formatLines = 1,
+	formatPattern = {
+		"^[^ ]+?:([0-9]+)(:([0-9]+))?:\\s+([^ ]+):\\s+(.*)(\\r|\\n)*$",
+		{
+			line = 1,
+			column = 3,
+			security = 4,
+			message = 5
 		}
+	},
+	securities = {
+		F = "warning",
+		C = "warning",
+		D = "info",
+		R = "info"
 	}
-)
+}
 
-vim.api.nvim_exec(
-	[[
-augroup FormatAutogroup
-  autocmd!
-  autocmd BufWritePost *.lua,*.ex,*.exs,*.json,*.js,*.ts,*.jsx,*.tsx FormatWrite
-augroup END
-]],
-	true
-)
+local prettier = {
+	rootPatterns = {
+		".git",
+		"package.json",
+		".prettierrc",
+		".prettierrc.json"
+	},
+	command = "prettier",
+	args = {"--stdin-filepath", "%filepath"},
+	sourceName = "prettier"
+}
+
+local luafmt = {
+	command = "luafmt",
+	args = {
+		"--use-tabs",
+		"--indent-count",
+		4,
+		"--stdin",
+		"%filepath"
+	},
+	sourceName = "luafmt"
+}
+
+M.options = {
+	linters = {
+		eslint = eslint,
+		stylelint = stylelint,
+		credo = credo
+	},
+	formatters = {
+		prettier = prettier,
+		luafmt = luafmt
+	},
+	filetypes = {
+		javascript = "eslint",
+		javascriptreact = "eslint",
+		typescript = "eslint",
+		typescriptreact = "eslint",
+		css = "stylelint",
+		sass = "stylelint",
+		scss = "stylelint",
+		elixir = "credo",
+		eelixir = "credo"
+	},
+	formatFiletypes = {
+		javascript = "prettier",
+		javascriptreact = "prettier",
+		typescript = "prettier",
+		typescriptreact = "prettier",
+		json = "prettier",
+		scss = "prettier",
+		less = "prettier",
+		markdown = "prettier",
+		lua = "luafmt"
+	}
+}
+
+M.filetypes = vim.tbl_keys(vim.tbl_extend("keep", M.options.filetypes, M.options.formatFiletypes))
+
+return M
